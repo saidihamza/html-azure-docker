@@ -30,8 +30,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t votre-username/html-docker-app:latest .
-          docker push votre-username/html-docker-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/html-docker-app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/html-docker-app:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -51,4 +51,4 @@ jobs:
 
       - name: Deploy to Azure
         run: |
-          az webapp up --name html-docker-app --resource-group votre-groupe-ressource --plan votre-plan
+          az webapp up --name html-docker-app --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --plan ${{ secrets.AZURE_PLAN }}
