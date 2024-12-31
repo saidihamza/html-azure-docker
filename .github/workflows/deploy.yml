@@ -41,9 +41,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Azure CLI
-        uses: azure/cli-action@v1
-
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -51,4 +48,9 @@ jobs:
 
       - name: Deploy to Azure
         run: |
-          az webapp up --name html-docker-app --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --plan ${{ secrets.AZURE_PLAN }}
+          az webapp up \
+            --name html-docker-app \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --plan ${{ secrets.AZURE_PLAN }} \
+            --docker-registry-server-url https://index.docker.io/v1/ \
+            --docker-custom-image-name ${{ secrets.DOCKER_USERNAME }}/html-docker-app:latest
