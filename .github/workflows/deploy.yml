@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Étape 2 : Configuration Docker
+      # Étape 2 : Se connecter à Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -32,15 +32,26 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # Étape 4 : Configuration Azure CLI
-      - name: Set up Azure CLI
-        uses: azure/cli@v1
-        with:
-          inlineScript: |
-            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-            az acr login --name <your-container-registry-name>
+      # Étape 4 : Installer Azure CLI (au lieu d'utiliser azure/cli@v1)
+      - name: Install Azure CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y azure-cli
 
-      # Étape 5 : Déployer l'application
+      # Étape 5 : Se connecter à Azure
+      - name: Login to Azure
+        run: |
+          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+
+      # Étape 6 : Se connecter au registre Azure Container Registry
+      - name: Log in to Azure Container Registry
+        run: |
+          az acr login --name <your-container-registry-name>
+
+      # Étape 7 : Déployer sur Azure Web App
       - name: Deploy to Azure Web App
         run: |
-          az webapp create --resource-group <your-resource-group> --plan <your-app-service-plan> --name <your-app-name> --deployment-container-image-name ${{ secrets.DOCKER_USERNAME }}/html-azure-docker:latest
+          az webapp create --resource-group <your-resource-group> \
+            --plan <your-app-service-plan> \
+            --name <your-app-name> \
+            --deployment-container-image-name ${{ secrets.DOCKER_USERNAME }}/html-azure-docker:latest
