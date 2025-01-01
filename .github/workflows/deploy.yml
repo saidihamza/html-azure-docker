@@ -36,7 +36,9 @@ jobs:
       - name: Install Azure CLI
         run: |
           sudo apt-get update
-          sudo apt-get install -y azure-cli
+          sudo apt-get install -y ca-certificates curl apt-transport-https lsb-release gnupg
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          az --version  # Vérifie que l'outil az est installé correctement
 
       # Étape 5 : Se connecter à Azure
       - name: Login to Azure
