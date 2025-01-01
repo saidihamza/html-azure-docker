@@ -52,6 +52,6 @@ jobs:
       - name: Deploy to Azure Web App
         run: |
           az webapp create --resource-group hamzaResourceGroup \
-            --plan hamzaAppPlan \  # Remplacez par le nom de votre plan App Service
-            --name hamzaHtmlApp  \
+            --plan hamzaAppPlan \
+            --name hamzaHtmlApp \
             --deployment-container-image-name ${{ secrets.DOCKER_USERNAME }}/html-azure-docker:latest
